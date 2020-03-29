@@ -57,12 +57,23 @@ def move_citizens(cit_s, cit_h, pos_s, pos_h):
     return fin_cit_s, fin_cit_h, fin_pos_s, fin_pos_h
 
 def evaluate_data(count, inf_nrs):
+    # Create datasets to plot
+    const = [100] * count
+    healthy = np.asarray([100] * count) - np.asarray(inf_nrs)
+    
+    # Create and Show Plot
+    plt.plot(range(0,count), const)
+    plt.fill_between(range(0,count), const)
+
     plt.plot(range(0,count), inf_nrs)
+    plt.fill_between(range(0,count), inf_nrs)
+    
     plt.ylabel('Number of Infections')
     plt.xlabel('Simulation Steps')
     plt.show()
 
 #==================================================================================================
+
 
 if __name__ == "__main__":
     board = init_board()
@@ -77,7 +88,7 @@ if __name__ == "__main__":
         board.update()
         citizens_s, citizens_h, position_s, position_h = move_citizens(citizens_s, citizens_h, position_s, position_s)
         infection_nrs.append(len(citizens_s))
-        if len(citizens_s)>99:
+        if len(citizens_s)>30:
             run=False
     #board.mainloop()
     evaluate_data(counter, infection_nrs)
