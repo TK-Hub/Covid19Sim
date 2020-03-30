@@ -8,10 +8,11 @@ from citizen import Citizen
 import turtle
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 def init_board():
     screen = turtle.Screen()
-    screen.setup(width=1000, height=1000)
+    screen.setup(width=800, height=800)
     screen.bgcolor("black")
     screen.title("Covid19-Simulation")
     screen.tracer(0)
@@ -76,18 +77,17 @@ def evaluate_data(count, inf_nrs, rec_nrs):
     recovered = np.asarray(inf_nrs) + np.asarray(rec_nrs)
     
     # Create and Show Plot
-    plt.plot(range(0,count), const)
-    plt.fill_between(range(0,count), const)
+    plt.plot(range(0,count), const, color="green")
+    plt.fill_between(range(0,count), const, color="green")
 
-    plt.plot(range(0,count), recovered)
-    plt.fill_between(range(0,count), recovered)
+    plt.plot(range(0,count), recovered, color="grey")
+    plt.fill_between(range(0,count), recovered, color="grey")
 
-    plt.plot(range(0,count), inf_nrs)
-    plt.fill_between(range(0,count), inf_nrs)
+    plt.plot(range(0,count), inf_nrs, color="red")
+    plt.fill_between(range(0,count), inf_nrs, color="red")
     
-    plt.ylabel('Number of Infections')
-    plt.xlabel('Simulation Steps')
-    plt.show()
+    #plt.show()
+    fig.canvas.draw()
 
 #==================================================================================================
 
@@ -97,9 +97,17 @@ if __name__ == "__main__":
     
     citizens_s, citizens_h, citizens_r = citizens[:2], citizens[1:], []
     position_s, position_h, position_r = positions[:2], positions[1:], []
-    run = True
+    
     counter, infection_nrs, recovered_nrs = 0, [], []
+    run = True
+    
+    fig = plt.gcf()
+    plt.ylabel('Number of Infections')
+    plt.xlabel('Simulation Steps')
+    fig.show()
+    fig.canvas.draw()
 
+    # Plot once at the End of Simulation
     while run == True:
         counter+=1
         board.update()
@@ -109,7 +117,12 @@ if __name__ == "__main__":
         infection_nrs.append(len(citizens_s))
         recovered_nrs.append(len(citizens_r))
 
-        if len(citizens_r) > 85:
+        # Determine steps in which plot is refreshed
+        if counter % 50 == 0:
+            evaluate_data(counter, infection_nrs, recovered_nrs)
+        
+        if len(citizens_s) == 0:
             run=False
+    
+    plt.show()
     #board.mainloop()
-    evaluate_data(counter, infection_nrs, recovered_nrs)
