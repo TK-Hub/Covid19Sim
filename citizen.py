@@ -12,8 +12,8 @@ class Citizen:
     def __init__(self):
 
         # Initialize basic properties of single citizen
-        self.pos_x = random.randint(-500,500)
-        self.pos_y = random.randint(-500,500)
+        self.pos_x = random.randint(-400,400)
+        self.pos_y = random.randint(-400,400)
         self.status = "healthy"
         self.sickdays = 0
 
@@ -24,26 +24,26 @@ class Citizen:
         self.man.color("green")
         self.man.penup()
         self.man.goto(self.pos_x, self.pos_y)
-        self.man.dx=random.randint(-3,3)
-        self.man.dy=random.randint(-3,3)
+        self.man.dx=random.randint(-4,4)
+        self.man.dy=random.randint(-4,4)
         return self.pos_x, self.pos_y
 
     def move_pos(self):
         self.man.setx(self.man.xcor() + self.man.dx)
         self.man.sety(self.man.ycor() + self.man.dy)
 
-        if self.man.xcor() > 500:
+        if self.man.xcor() > 400:
             self.man.dx *= -1
-        if self.man.xcor() < -500:
+        if self.man.xcor() < -400:
             self.man.dx *= -1
-        if self.man.ycor() > 500:
+        if self.man.ycor() > 400:
             self.man.dy *= -1
-        if self.man.ycor() < -500:
+        if self.man.ycor() < -400:
             self.man.dy *= -1
         
-        if 1 <= self.sickdays < 300:
+        if 1 <= self.sickdays < 250:
             self.sickdays+=1
-        if self.sickdays == 300:
+        if self.sickdays == 250:
             self.man.color("grey")
             self.sickdays+=1
             self.status="recovered"
@@ -53,7 +53,7 @@ class Citizen:
     def sim_infection(self, coo_temp, comp_pos):
         for i in comp_pos:
             dist = np.sqrt(np.sum((np.asarray(i) - np.asarray(coo_temp)) ** 2))
-            if dist < 15:
+            if (dist < 15) and (random.random()<0.7):
                 self.status="sick"
                 self.man.color("red")
                 self.sickdays+=1
