@@ -29,6 +29,18 @@ class Citizen:
         return self.pos_x, self.pos_y
 
     def move_pos(self):
+        
+        # Concentrate on central spot
+        """prob = random.random()
+        print(prob)
+
+        if prob < 0.002:
+            self.man.goto(0,0)
+        else:
+            self.man.setx(self.man.xcor() + self.man.dx)
+            self.man.sety(self.man.ycor() + self.man.dy)"""
+
+        # Random Walk
         self.man.setx(self.man.xcor() + self.man.dx)
         self.man.sety(self.man.ycor() + self.man.dy)
 
