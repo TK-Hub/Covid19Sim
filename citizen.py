@@ -73,3 +73,31 @@ class Citizen:
             else:
                 self.status="healthy"
         return self.status
+
+
+class Pool_Citizen:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.status = "healthy"
+
+class Covid_Pool:
+    def __init__(self, size):
+        # Initialize basic properties of single citizen
+        self.size = size
+        self.citizen_list_healthy = [Pool_Citizen(0, 0) for i in range(self.size)]
+        self.citizen_list_sick, self.citizen_list_healed, self.citizen_list_dead = [], [], []
+        self.prob_sick = 0
+        self.sim_days = 0
+
+    def calculate_probabilities(self):
+        self.prob_sick = len(self.citizen_list_sick) / (self.citizen_list_healthy)
+        return self.prob_sick
+
+    def a_day_in_the_city(self):
+        calculate_probabilities()
+        for citizen in self.citizen_list_healthy:
+            if random.random() < self.prob_sick:
+                citizen.status = "sick"
+                
+        self.sim_days += 1

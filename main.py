@@ -4,7 +4,7 @@
 #                       Date: 28.03.2020
 #==================================================================================================
 
-from citizen import Citizen
+from citizen import Citizen, Covid_Pool
 import turtle
 import numpy as np
 import matplotlib.pyplot as plt
@@ -92,37 +92,44 @@ def evaluate_data(count, inf_nrs, rec_nrs):
 #==================================================================================================
 
 if __name__ == "__main__":
-    board = init_board()
-    citizens, positions = init_citizens()
+    sim_type = input("Please select the type of simulation to run. \n 1: Ball Simulation \n 2: Mathematical Simulation \n")
     
-    citizens_s, citizens_h, citizens_r = citizens[:2], citizens[1:], []
-    position_s, position_h, position_r = positions[:2], positions[1:], []
-    
-    counter, infection_nrs, recovered_nrs = 0, [], []
-    run = True
-    
-    fig = plt.gcf()
-    plt.ylabel('Number of Infections')
-    plt.xlabel('Simulation Steps')
-    fig.show()
-    fig.canvas.draw()
-
-    # Plot once at the End of Simulation
-    while run == True:
-        counter+=1
-        board.update()
-        citizens_s, citizens_h, citizens_r, position_s, position_h, position_r = move_citizens(citizens_s, citizens_h, citizens_r, position_s, position_h, position_r)
+    if sim_type == "1":
+        board = init_board()
+        citizens, positions = init_citizens()
         
-        # Record Data for Evaluation
-        infection_nrs.append(len(citizens_s))
-        recovered_nrs.append(len(citizens_r))
-
-        # Determine steps in which plot is refreshed
-        if counter % 50 == 0:
-            evaluate_data(counter, infection_nrs, recovered_nrs)
+        citizens_s, citizens_h, citizens_r = citizens[:2], citizens[1:], []
+        position_s, position_h, position_r = positions[:2], positions[1:], []
         
-        if len(citizens_s) == 0:
-            run=False
+        counter, infection_nrs, recovered_nrs = 0, [], []
+        run = True
+        
+        fig = plt.gcf()
+        plt.ylabel('Number of Infections')
+        plt.xlabel('Simulation Steps')
+        fig.show()
+        fig.canvas.draw()
+
+        # Plot once at the End of Simulation
+        while run == True:
+            counter+=1
+            board.update()
+            citizens_s, citizens_h, citizens_r, position_s, position_h, position_r = move_citizens(citizens_s, citizens_h, citizens_r, position_s, position_h, position_r)
+            
+            # Record Data for Evaluation
+            infection_nrs.append(len(citizens_s))
+            recovered_nrs.append(len(citizens_r))
+
+            # Determine steps in which plot is refreshed
+            if counter % 50 == 0:
+                evaluate_data(counter, infection_nrs, recovered_nrs)
+            
+            if len(citizens_s) == 0:
+                run=False
+        
+        #plt.show()
+        board.mainloop()
     
-    plt.show()
-    #board.mainloop()
+    if sim_type == "2":
+        covid_pool = Covid_Pool(500)
+        print(covid_pool.citizen_list_healthy)
