@@ -9,7 +9,7 @@ import turtle
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from matplotlib import style
+from mpl_toolkits.mplot3d import Axes3D
 
 def init_board():
     screen = turtle.Screen()
@@ -132,9 +132,12 @@ if __name__ == "__main__":
         board.mainloop()
     
     if sim_type == "2":
-        nr_people, contagion_prob, daily_contacts, healing_days = 9999, 0.3, 3, 7
+        #==========================================================================================
+        # 2D-Plot
+        """nr_people, contagion_prob, daily_contacts, healing_days = 9999, 0.3, 3, 7
         covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
         x, y1, y2, y3 = [], [], [], []
+
 
         #fig = plt.figure()
         #ax1 = fig.add_subplot(1,1,1)
@@ -164,4 +167,44 @@ if __name__ == "__main__":
         
         
         #ani = animation.FuncAnimation(fig, animate, interval=100)
-        plt.show()
+        plt.show()"""
+
+        #==========================================================================================
+        # 3D-Plot
+        range_prob = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]
+        range_contacts = [3, 4, 5, 6, 7]
+        range_healing = []
+        data_days = []
+
+        for i in range_prob:
+            for j in range_contacts:
+                nr_people, contagion_prob, daily_contacts, healing_days = 9999, i, j, 7
+                covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
+                x, y1, y2, y3 = [], [], [], []
+
+                while len(covid_pool.citizen_list_healed) < (nr_people-500):
+                    covid_pool.a_day_in_the_city()
+                    x.append(covid_pool.sim_days)
+                    # Const. total nr.
+                    y1.append(len(covid_pool.citizen_list_healthy) + len(covid_pool.citizen_list_sick) + len(covid_pool.citizen_list_healed))
+                    # Sick + recovered people to distinct recovered people
+                    y2.append(len(covid_pool.citizen_list_healed) + len(covid_pool.citizen_list_sick))
+                    # Nr. of sick people
+                    y3.append(len(covid_pool.citizen_list_sick))
+                
+                data_days.append((i, y, len(x)))
+        
+
+        """fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        X, Y = np.meshgrid(range_prob, range_contacts)
+        #X = np.asarray([range_prob])
+        #Y = np.asarray([range_contacts])
+        Z = np.asarray([days])
+        print(X, Y, Z)
+        
+        fig = plt.figure()
+        ax = Axes3D(fig)
+        ax.plot_surface(X, Y, Z)
+        plt.show()"""
