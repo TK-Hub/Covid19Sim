@@ -9,6 +9,7 @@ import turtle
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib import style
 
 def init_board():
     screen = turtle.Screen()
@@ -131,5 +132,36 @@ if __name__ == "__main__":
         board.mainloop()
     
     if sim_type == "2":
-        covid_pool = Covid_Pool(500)
-        print(covid_pool.citizen_list_healthy)
+        nr_people, contagion_prob, daily_contacts, healing_days = 9999, 0.3, 3, 7
+        covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
+        x, y1, y2, y3 = [], [], [], []
+
+        #fig = plt.figure()
+        #ax1 = fig.add_subplot(1,1,1)
+
+        while len(covid_pool.citizen_list_healed) < (nr_people-500):
+        #def animate(i):
+            covid_pool.a_day_in_the_city()
+            x.append(covid_pool.sim_days)
+            # Const. total nr.
+            y1.append(len(covid_pool.citizen_list_healthy) + len(covid_pool.citizen_list_sick) + len(covid_pool.citizen_list_healed))
+            # Sick + recovered people to distinct recovered people
+            y2.append(len(covid_pool.citizen_list_healed) + len(covid_pool.citizen_list_sick))
+            # Nr. of sick people
+            y3.append(len(covid_pool.citizen_list_sick))
+
+        #print(x, y1, y2, y3)
+        plt.plot(x, y1, color="blue")
+        plt.fill_between(x, y1, color="blue")
+        
+        plt.plot(x, y2, color="green")
+        plt.fill_between(x, y2, color="green")
+        
+        plt.plot(x, y3, color="red")
+        plt.fill_between(x, y3, color="red")
+        plt.ylabel('Number of Citizens')
+        plt.xlabel('Number of Past Days')
+        
+        
+        #ani = animation.FuncAnimation(fig, animate, interval=100)
+        plt.show()

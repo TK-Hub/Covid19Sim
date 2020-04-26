@@ -80,24 +80,50 @@ class Pool_Citizen:
         self.x = x
         self.y = y
         self.status = "healthy"
+        self.sick_days = 0
 
 class Covid_Pool:
-    def __init__(self, size):
+    def __init__(self, size, infection_probability, daily_meetings, healing_days):
         # Initialize basic properties of single citizen
         self.size = size
+        self.infection_probability = infection_probability
+        self.daily_meetings = daily_meetings
+        self.healing_days = healing_days
         self.citizen_list_healthy = [Pool_Citizen(0, 0) for i in range(self.size)]
-        self.citizen_list_sick, self.citizen_list_healed, self.citizen_list_dead = [], [], []
-        self.prob_sick = 0
-        self.sim_days = 0
+        self.citizen_list_sick, self.citizen_list_healed, self.citizen_list_dead = [Pool_Citizen(0, 0)], [], []
+        self.prob_sick, self.sim_days = 0, 0
 
     def calculate_probabilities(self):
-        self.prob_sick = len(self.citizen_list_sick) / (self.citizen_list_healthy)
-        return self.prob_sick
+        self.prob_sick = len(self.citizen_list_sick) /(len(self.citizen_list_healthy) + len(self.citizen_list_sick) + len(self.citizen_list_healed))
+        #return self.prob_sick
 
     def a_day_in_the_city(self):
-        calculate_probabilities()
+        self.calculate_probabilities()
+        
+        # Simulate new infections through contacts with people
         for citizen in self.citizen_list_healthy:
-            if random.random() < self.prob_sick:
+            meetings = [(random.random()*(1/self.infection_probability)) for i in range(self.daily_meetings)]
+            #print(meetings, min(meetings))
+            if min(meetings) < self.prob_sick:
                 citizen.status = "sick"
-                
+                sick_cit = self.citizen_list_healthy.pop(self.citizen_list_healthy.index(citizen))
+                self.citizen_list_sick.append(sick_cit)
+            else:
+                pass
+        
+        # Count days and cure eventually
+        for citizen in self.citizen_list_sick:    
+            if citizen.status == "sick":
+                citizen.sick_days += 1
+            else:
+                pass
+            
+            if citizen.sick_days == self.healing_days:
+                citizen.status = "healed"
+                healed_cit = self.citizen_list_sick.pop(self.citizen_list_sick.index(citizen))
+                self.citizen_list_healed.append(healed_cit)
+            else:
+                pass
+
         self.sim_days += 1
+        print(len(self.citizen_list_healthy), len(self.citizen_list_sick), len(self.citizen_list_healed), self.prob_sick, "Tage:", self.sim_days)
