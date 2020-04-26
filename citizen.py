@@ -102,8 +102,8 @@ class Covid_Pool:
         
         # Simulate new infections through contacts with people
         for citizen in self.citizen_list_healthy:
+            # Generation of several random numbers to simulate the contact with multiple people per day
             meetings = [(random.random()*(1/self.infection_probability)) for i in range(self.daily_meetings)]
-            #print(meetings, min(meetings))
             if min(meetings) < self.prob_sick:
                 citizen.status = "sick"
                 sick_cit = self.citizen_list_healthy.pop(self.citizen_list_healthy.index(citizen))
