@@ -175,8 +175,10 @@ if __name__ == "__main__":
         range_contacts = [3, 4, 5, 6, 7]
         range_healing = []
         data_days = []
+        data_days = [30, 25, 23, 21, 20, 26, 24, 21, 20, 19, 29, 23, 21, 20, 19, 24, 21, 21, 20, 20, 24, 20, 19, 18,
+ 19, 22, 20, 19, 18, 19, 21, 20, 19, 19, 18, 20, 19, 19, 18, 18, 23, 19, 19, 17, 17]
 
-        for i in range_prob:
+        """for i in range_prob:
             for j in range_contacts:
                 nr_people, contagion_prob, daily_contacts, healing_days = 9999, i, j, 7
                 covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
@@ -192,19 +194,16 @@ if __name__ == "__main__":
                     # Nr. of sick people
                     y3.append(len(covid_pool.citizen_list_sick))
                 
-                data_days.append((i, y, len(x)))
+                data_days.append(len(x))"""
         
 
-        """fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        
-        X, Y = np.meshgrid(range_prob, range_contacts)
-        #X = np.asarray([range_prob])
-        #Y = np.asarray([range_contacts])
-        Z = np.asarray([days])
-        print(X, Y, Z)
-        
         fig = plt.figure()
-        ax = Axes3D(fig)
-        ax.plot_surface(X, Y, Z)
-        plt.show()"""
+        ax = plt.axes(projection='3d')
+        
+        #X, Y = np.meshgrid(range_prob, range_contacts)
+        X = np.asarray(range_prob)
+        Y = np.asarray(range_contacts)
+        Z = np.asarray(data_days)
+        print(X, Y, Z)
+        ax.plot_trisurf(X, Y, Z)
+        plt.show()
