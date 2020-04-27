@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
+from scipy.interpolate import griddata
 
 def init_board():
     screen = turtle.Screen()
@@ -174,11 +175,10 @@ if __name__ == "__main__":
         range_prob = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]
         range_contacts = [3, 4, 5, 6, 7]
         range_healing = []
-        data_days = []
-        data_days = [30, 25, 23, 21, 20, 26, 24, 21, 20, 19, 29, 23, 21, 20, 19, 24, 21, 21, 20, 20, 24, 20, 19, 18,
- 19, 22, 20, 19, 18, 19, 21, 20, 19, 19, 18, 20, 19, 19, 18, 18, 23, 19, 19, 17, 17]
-
-        """for i in range_prob:
+        result_data = []
+        #result_data = [(0.3, 3, 29), (0.3, 4, 29), (0.3, 5, 23), (0.3, 6, 22), (0.3, 7, 21), (0.35, 3, 25), (0.35, 4, 24), (0.35, 5, 22), (0.35, 6, 21), (0.35, 7, 19), (0.4, 3, 25), (0.4, 4, 23), (0.4, 5, 21), (0.4, 6, 21), (0.4, 7, 19), (0.45, 3, 25), (0.45, 4, 21), (0.45, 5, 20), (0.45, 6, 19), (0.45, 7, 19), (0.5, 3, 22), (0.5, 4, 21), (0.5, 5, 20), (0.5, 6, 19), (0.5, 7, 18), (0.55, 3, 22), (0.55, 4, 20), (0.55, 5, 20), (0.55, 6, 19), (0.55, 7, 18), (0.6, 3, 22), (0.6, 4, 20), (0.6, 5, 19), (0.6, 6, 18), (0.6, 7, 18), (0.65, 3, 20), (0.65, 4, 19), (0.65, 5, 19), (0.65, 6, 18), (0.65, 7, 17), (0.7, 3, 20), (0.7, 4, 19), (0.7, 5, 19), (0.7, 6, 18), (0.7, 7, 17)]
+        
+        for i in range_prob:
             for j in range_contacts:
                 nr_people, contagion_prob, daily_contacts, healing_days = 9999, i, j, 7
                 covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
@@ -194,16 +194,20 @@ if __name__ == "__main__":
                     # Nr. of sick people
                     y3.append(len(covid_pool.citizen_list_sick))
                 
-                data_days.append(len(x))"""
+                result_data.append((i, j, max(y3)))
         
+        print(result_data)
+        
+        # Prepare Data Tuples for Plotting
+        x, y, z = zip(*result_data)
+        grid_x, grid_y = np.mgrid[min(x):max(x):100j, min(y):max(y):100j]
+        grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
 
+        # 3D-Plot Data
         fig = plt.figure()
-        ax = plt.axes(projection='3d')
-        
-        #X, Y = np.meshgrid(range_prob, range_contacts)
-        X = np.asarray(range_prob)
-        Y = np.asarray(range_contacts)
-        Z = np.asarray(data_days)
-        print(X, Y, Z)
-        ax.plot_trisurf(X, Y, Z)
+        ax = fig.gca(projection='3d')
+        ax.plot_surface(grid_x, grid_y, grid_z, cmap=plt.cm.Spectral)
+        ax.set_xlabel('Infection Probability')
+        ax.set_ylabel('Average Number of Daily Contacts')
+        ax.set_zlabel('Max. Nr. Sick People')
         plt.show()
