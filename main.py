@@ -133,81 +133,80 @@ if __name__ == "__main__":
         board.mainloop()
     
     if sim_type == "2":
-        #==========================================================================================
-        # 2D-Plot
-        """nr_people, contagion_prob, daily_contacts, healing_days = 9999, 0.3, 3, 7
-        covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
-        x, y1, y2, y3 = [], [], [], []
+        plot_type = input("Please select the type of plot to show. \n 1: 1 set, 2D \n 2: Value range, 3D \n")
+        if plot_type == "1":
+            #==========================================================================================
+            # 2D-Plot
+            nr_people, contagion_prob, daily_contacts, healing_days = 9999, 0.5, 3, 7
+            covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
+            x, y1, y2, y3 = [], [], [], []
 
 
-        #fig = plt.figure()
-        #ax1 = fig.add_subplot(1,1,1)
+            #fig = plt.figure()
+            #ax1 = fig.add_subplot(1,1,1)
 
-        while len(covid_pool.citizen_list_healed) < (nr_people-500):
-        #def animate(i):
-            covid_pool.a_day_in_the_city()
-            x.append(covid_pool.sim_days)
-            # Const. total nr.
-            y1.append(len(covid_pool.citizen_list_healthy) + len(covid_pool.citizen_list_sick) + len(covid_pool.citizen_list_healed))
-            # Sick + recovered people to distinct recovered people
-            y2.append(len(covid_pool.citizen_list_healed) + len(covid_pool.citizen_list_sick))
-            # Nr. of sick people
-            y3.append(len(covid_pool.citizen_list_sick))
+            while len(covid_pool.citizen_list_healed) < (nr_people-500):
+                covid_pool.a_day_in_the_city()
+                x.append(covid_pool.sim_days)
+                # Const. total nr.
+                y1.append(len(covid_pool.citizen_list_healthy) + len(covid_pool.citizen_list_sick) + len(covid_pool.citizen_list_healed))
+                # Sick + recovered people to distinct recovered people
+                y2.append(len(covid_pool.citizen_list_healed) + len(covid_pool.citizen_list_sick))
+                # Nr. of sick people
+                y3.append(len(covid_pool.citizen_list_sick))
 
-        #print(x, y1, y2, y3)
-        plt.plot(x, y1, color="blue")
-        plt.fill_between(x, y1, color="blue")
-        
-        plt.plot(x, y2, color="green")
-        plt.fill_between(x, y2, color="green")
-        
-        plt.plot(x, y3, color="red")
-        plt.fill_between(x, y3, color="red")
-        plt.ylabel('Number of Citizens')
-        plt.xlabel('Number of Past Days')
-        
-        
-        #ani = animation.FuncAnimation(fig, animate, interval=100)
-        plt.show()"""
+            #print(x, y1, y2, y3)
+            plt.plot(x, y1, color="blue")
+            plt.fill_between(x, y1, color="blue")
+            
+            plt.plot(x, y2, color="green")
+            plt.fill_between(x, y2, color="green")
+            
+            plt.plot(x, y3, color="red")
+            plt.fill_between(x, y3, color="red")
+            plt.ylabel('Number of citizens (healthy, sick and recovered)')
+            plt.xlabel('Number of days past')
+            
+            plt.show()
+            
+        elif plot_type=="2":
+            #==========================================================================================
+            # 3D-Plot
+            range_prob = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+            range_contacts = [3, 4, 5, 6, 7]
+            range_healing = []
+            result_data = []
+            
+            for i in range_prob:
+                for j in range_contacts:
+                    nr_people, contagion_prob, daily_contacts, healing_days = 9999, i, j, 7
+                    covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
+                    x, y1, y2, y3 = [], [], [], []
 
-        #==========================================================================================
-        # 3D-Plot
-        range_prob = [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]
-        range_contacts = [3, 4, 5, 6, 7]
-        range_healing = []
-        result_data = []
-        #result_data = [(0.3, 3, 29), (0.3, 4, 29), (0.3, 5, 23), (0.3, 6, 22), (0.3, 7, 21), (0.35, 3, 25), (0.35, 4, 24), (0.35, 5, 22), (0.35, 6, 21), (0.35, 7, 19), (0.4, 3, 25), (0.4, 4, 23), (0.4, 5, 21), (0.4, 6, 21), (0.4, 7, 19), (0.45, 3, 25), (0.45, 4, 21), (0.45, 5, 20), (0.45, 6, 19), (0.45, 7, 19), (0.5, 3, 22), (0.5, 4, 21), (0.5, 5, 20), (0.5, 6, 19), (0.5, 7, 18), (0.55, 3, 22), (0.55, 4, 20), (0.55, 5, 20), (0.55, 6, 19), (0.55, 7, 18), (0.6, 3, 22), (0.6, 4, 20), (0.6, 5, 19), (0.6, 6, 18), (0.6, 7, 18), (0.65, 3, 20), (0.65, 4, 19), (0.65, 5, 19), (0.65, 6, 18), (0.65, 7, 17), (0.7, 3, 20), (0.7, 4, 19), (0.7, 5, 19), (0.7, 6, 18), (0.7, 7, 17)]
-        
-        for i in range_prob:
-            for j in range_contacts:
-                nr_people, contagion_prob, daily_contacts, healing_days = 9999, i, j, 7
-                covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
-                x, y1, y2, y3 = [], [], [], []
+                    while len(covid_pool.citizen_list_healed) < (nr_people-500):
+                        covid_pool.a_day_in_the_city()
+                        x.append(covid_pool.sim_days)
+                        # Const. total nr.
+                        y1.append(len(covid_pool.citizen_list_healthy) + len(covid_pool.citizen_list_sick) + len(covid_pool.citizen_list_healed))
+                        # Sick + recovered people to distinct recovered people
+                        y2.append(len(covid_pool.citizen_list_healed) + len(covid_pool.citizen_list_sick))
+                        # Nr. of sick people
+                        y3.append(len(covid_pool.citizen_list_sick))
+                    
+                    result_data.append((i, j, max(y3)))
+            
+            print(result_data)
+            
+            # Prepare Data Tuples for Plotting
+            x, y, z = zip(*result_data)
+            grid_x, grid_y = np.mgrid[min(x):max(x):100j, min(y):max(y):100j]
+            grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
 
-                while len(covid_pool.citizen_list_healed) < (nr_people-500):
-                    covid_pool.a_day_in_the_city()
-                    x.append(covid_pool.sim_days)
-                    # Const. total nr.
-                    y1.append(len(covid_pool.citizen_list_healthy) + len(covid_pool.citizen_list_sick) + len(covid_pool.citizen_list_healed))
-                    # Sick + recovered people to distinct recovered people
-                    y2.append(len(covid_pool.citizen_list_healed) + len(covid_pool.citizen_list_sick))
-                    # Nr. of sick people
-                    y3.append(len(covid_pool.citizen_list_sick))
-                
-                result_data.append((i, j, max(y3)))
-        
-        print(result_data)
-        
-        # Prepare Data Tuples for Plotting
-        x, y, z = zip(*result_data)
-        grid_x, grid_y = np.mgrid[min(x):max(x):100j, min(y):max(y):100j]
-        grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
-
-        # 3D-Plot Data
-        fig = plt.figure()
-        ax = fig.gca(projection='3d')
-        ax.plot_surface(grid_x, grid_y, grid_z, cmap=plt.cm.Spectral)
-        ax.set_xlabel('Infection Probability')
-        ax.set_ylabel('Average Number of Daily Contacts')
-        ax.set_zlabel('Max. Nr. Sick People')
-        plt.show()
+            # 3D-Plot Data
+            fig = plt.figure()
+            ax = fig.gca(projection='3d')
+            ax.plot_surface(grid_x, grid_y, grid_z, cmap=plt.cm.Spectral)
+            ax.set_xlabel('Infection probability')
+            ax.set_ylabel('Average number of daily contacts')
+            ax.set_zlabel('Peak of positive cases')
+            plt.show()
