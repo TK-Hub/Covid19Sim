@@ -9,7 +9,12 @@ import time
 import numpy as np
 
 class Citizen:
-    def __init__(self):
+    def __init__(self, nr_sickdays, infection_distance, infection_probability):
+
+        # Initialize instance variables
+        self.nr_sickdays = nr_sickdays 
+        self.infection_distance = infection_distance
+        self.infection_probability = infection_probability
 
         # Initialize basic properties of single citizen
         self.pos_x = random.randint(-400,400)
@@ -53,9 +58,9 @@ class Citizen:
         if self.man.ycor() < -400:
             self.man.dy *= -1
         
-        if 1 <= self.sickdays < 250:
+        if 1 <= self.sickdays < self.nr_sickdays:
             self.sickdays+=1
-        if self.sickdays == 250:
+        if self.sickdays == self.nr_sickdays:
             self.man.color("grey")
             self.sickdays+=1
             self.status="recovered"
@@ -65,7 +70,7 @@ class Citizen:
     def sim_infection(self, coo_temp, comp_pos):
         for i in comp_pos:
             dist = np.sqrt(np.sum((np.asarray(i) - np.asarray(coo_temp)) ** 2))
-            if (dist < 15) and (random.random()<0.7):
+            if (dist < self.infection_distance) and (random.random()<self.infection_probability):
                 self.status="sick"
                 self.man.color("red")
                 self.sickdays+=1

@@ -1,0 +1,16 @@
+{
+    "Ball_Simulation":{
+        "nr_of_citizens" : 100,
+        "nr_sickdays" : 250,
+        "infection_distance" : 15,
+        "infection_probability" : 0.7
+    },
+    "Mathematical_Simulation":{
+        "nr_of_citizens" : 9999,
+        "infection_probability" : 0.5,
+        "daily_contacts" : 3,
+        "healing_days" : 7,
+        "infection_probability_range": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        "daily_contacts_range": [3, 4, 5, 6, 7]
+    }
+}

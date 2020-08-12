@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from mpl_toolkits.mplot3d import Axes3D
 from scipy.interpolate import griddata
+import json
 
 def init_board():
     screen = turtle.Screen()
@@ -20,11 +21,11 @@ def init_board():
     screen.tracer(0)
     return screen
 
-def init_citizens():
+def init_citizens(nr_citizens, nr_sickdays, infection_distance, infection_probability):
     citizens=[]
     initial_positions=[]
-    for j in range(100):
-        citizen = Citizen()
+    for j in range(nr_citizens):
+        citizen = Citizen(nr_sickdays, infection_distance, infection_probability)
         initial_x, initial_y = citizen.init_pos()
         citizens.append(citizen)
         initial_positions.append([initial_x, initial_y])
@@ -95,10 +96,16 @@ def evaluate_data(count, inf_nrs, rec_nrs):
 
 if __name__ == "__main__":
     sim_type = input("Please select the type of simulation to run. \n 1: Ball Simulation \n 2: Mathematical Simulation \n")
-    
+    parameter_file = open("parameters.json")
+    parameters = json.load(parameter_file)
+
     if sim_type == "1":
         board = init_board()
-        citizens, positions = init_citizens()
+        pop = parameters["Ball_Simulation"]["nr_of_citizens"]
+        sickd = parameters["Ball_Simulation"]["nr_sickdays"]
+        inf_dist = parameters["Ball_Simulation"]["infection_distance"]
+        inf_prob = parameters["Ball_Simulation"]["infection_probability"]
+        citizens, positions = init_citizens(pop, sickd, inf_dist, inf_prob)
         
         citizens_s, citizens_h, citizens_r = citizens[:2], citizens[1:], []
         position_s, position_h, position_r = positions[:2], positions[1:], []
@@ -134,10 +141,14 @@ if __name__ == "__main__":
     
     if sim_type == "2":
         plot_type = input("Please select the type of plot to show. \n 1: 1 set, 2D \n 2: Value range, 3D \n")
+        nr_people = parameters["Mathematical_Simulation"]["nr_of_citizens"]
+        contagion_prob = parameters["Mathematical_Simulation"]["infection_probability"]
+        daily_contacts = parameters["Mathematical_Simulation"]["daily_contacts"]
+        healing_days = parameters["Mathematical_Simulation"]["healing_days"]
+        
         if plot_type == "1":
             #==========================================================================================
             # 2D-Plot
-            nr_people, contagion_prob, daily_contacts, healing_days = 9999, 0.5, 3, 7
             covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
             x, y1, y2, y3 = [], [], [], []
 
@@ -172,18 +183,18 @@ if __name__ == "__main__":
         elif plot_type=="2":
             #==========================================================================================
             # 3D-Plot
-            range_prob = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-            range_contacts = [3, 4, 5, 6, 7]
+            range_prob = parameters["Mathematical_Simulation"]["infection_probability_range"]
+            range_contacts = parameters["Mathematical_Simulation"]["daily_contacts_range"]
             range_healing = []
             result_data = []
             
             for i in range_prob:
                 for j in range_contacts:
-                    nr_people, contagion_prob, daily_contacts, healing_days = 9999, i, j, 7
+                    contagion_prob, daily_contacts, healing_days = i, j, parameters["Mathematical_Simulation"]["healing_days"]
                     covid_pool = Covid_Pool(nr_people, contagion_prob, daily_contacts, healing_days)
                     x, y1, y2, y3 = [], [], [], []
 
-                    while len(covid_pool.citizen_list_healed) < (nr_people-500):
+                    while len(covid_pool.citizen_list_healed) < (nr_people-(nr_people/2)):
                         covid_pool.a_day_in_the_city()
                         x.append(covid_pool.sim_days)
                         # Const. total nr.
