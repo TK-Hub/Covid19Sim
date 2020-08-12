@@ -7,10 +7,10 @@ This is a simulation of how infectious deseases can spread and how social distan
  2: "Mathematical Simulation":
     This is a similar simulation, but only as mathematical calculation. Therefore, this allows for simulating a larger population (I recommend around 10,000). If this option is selected, another similar input is asked:
     
-    1: "1 set, 2D": 
+2.1: "1 set, 2D": 
     This does the calculation for one set of parameters and outputs one 2D-graph (the maxiumum of which representing the peak of sick people at a time).
     
-    2: "Value range, 3D": 
+2.2: "Value range, 3D": 
     Expand this analysis to a range of values. This takes a range of daily contacts and infection probabilities and shows the change in the maximum number of sick people. It creates a surface map, where every point represents the maximum of the graph created in 2.1.
 
 The parameters for this Simulation can be set in "parameters.json".
